@@ -1,6 +1,6 @@
 name: docker_build_scan_push_image
 on:
-  - push
+  - pull_request
 jobs:
   build-images:
     runs-on: ubuntu-latest

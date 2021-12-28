@@ -1,6 +1,11 @@
 name: docker_build_image
 on:
-  - push
+  workflow_dispatch:
+    inputs:
+      ImageTag:
+        description: 'docker image tag'
+        required: true
+        default: 'latest'
 jobs:
   build-images:
     runs-on: ubuntu-latest
@@ -23,4 +28,4 @@ jobs:
           context: .
           file: ./flask_app.dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.event.inputs.ImageTag }}"
