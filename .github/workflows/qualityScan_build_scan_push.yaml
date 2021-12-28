@@ -1,6 +1,6 @@
 name: qualityscan_build_scan_push_image
 on:
-  - push
+  - pull_request
 jobs:
   quality-scan:
     runs-on: ubuntu-latest
