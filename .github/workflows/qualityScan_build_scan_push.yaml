@@ -1,0 +1,72 @@
+name: docker_build_scan_push_image
+on:
+  - push
+jobs:
+  quality-scan:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  build-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
+
+      - name: Login in Docker Hub
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build Image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          file: ./flask_app.dockerfile
+          load: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.sha }}
+
+      - name: Scan Image
+        uses: aquasecurity/trivy-action@master
+        with: 
+          image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.sha }}
+          hide-progress: false
+          format: 'table'
+          exit-code: 1
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+      
+      - name: Build and push
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          file: ./flask_app.dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.sha }}
