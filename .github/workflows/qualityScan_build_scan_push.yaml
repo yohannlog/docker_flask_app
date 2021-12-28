@@ -1,4 +1,4 @@
-name: docker_build_scan_push_image
+name: qualityscan_build_scan_push_image
 on:
   - push
 jobs:
@@ -31,6 +31,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   build-images:
+    needs: quality-scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
