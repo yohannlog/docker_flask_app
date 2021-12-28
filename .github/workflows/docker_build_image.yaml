@@ -28,4 +28,4 @@ jobs:
           context: .
           file: ./flask_app.dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.event.inputs.ImageTag }}"
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.event.inputs.ImageTag }}
