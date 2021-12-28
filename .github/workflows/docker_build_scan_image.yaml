@@ -26,7 +26,7 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.sha }}
 
       - name: Scan Image
-        uses: quasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@master
         with: 
           image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.sha }}
           hide-progress: false
