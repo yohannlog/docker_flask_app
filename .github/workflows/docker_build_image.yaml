@@ -36,7 +36,7 @@ jobs:
           IMAGE_VERSION: ${{ github.event.inputs.ImageTag }}
         run: |
           cd kustomize/
-          kustomize edit set image hello-gitops=$DOCKER_USERNAME/flask-app:$IMAGE_VERSION
+          kustomize edit set image flash-app=$DOCKER_USERNAME/flask-app:$IMAGE_VERSION
           cat kustomization.yaml
       
       - name: Commit files
