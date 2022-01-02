@@ -32,7 +32,7 @@ jobs:
 
       - name: Update Kubernetes resources
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           IMAGE_VERSION: ${{ github.event.inputs.ImageTag }}
         run: |
           cd kustomize/
