@@ -16,6 +16,9 @@ replicas:
   name: deploy-simple-flask-app
 
 images:
+- name: hello-gitops
+  newName: /flask-app
+  newTag: 0.2.0
 - name: polack27/flask-app
   newName: polack27/flask-app
   newTag: "0.1"
