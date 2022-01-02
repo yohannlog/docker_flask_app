@@ -6,25 +6,25 @@ commonLabels:
   owner: qsw
 
 resources:
-  - 00_namespace.yaml
-  - 01_deployment.yaml
-  - 02_service.yaml
-  - 03_ingress.yaml
+- 00_namespace.yaml
+- 01_deployment.yaml
+- 02_service.yaml
+- 03_ingress.yaml
 
 replicas:
-  - name: deploy-simple-flask-app
-    count: 3
+- count: 3
+  name: deploy-simple-flask-app
 
 images:
-  - name: polack27/flask-app
-    newTag: "0.1"
+- name: polack27/flask-app
+  newName: polack27/flask-app
+  newTag: "0.1"
 
 patches:
-- target:
-    kind: Ingress
-    name: ing-flask-app
-  patch: |-
+- patch: |-
     - op: replace
       path: /spec/rules/0/host
       value: mydomain.org
-  
+  target:
+    kind: Ingress
+    name: ing-flask-app
