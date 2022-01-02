@@ -29,3 +29,23 @@ jobs:
           file: ./flask_app.dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:${{ github.event.inputs.ImageTag }}
+
+      - name: Update Kubernetes resources
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          IMAGE_VERSION: ${{ github.event.inputs.ImageTag }}
+        run: |
+          cd kustomize/
+          kustomize edit set image hello-gitops=$DOCKER_USERNAME/flask-app:$IMAGE_VERSION
+          cat kustomization.yaml
+      
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Update image tag by Github action workflow docker_build_image"
+      
+      - name: Puhs code
+        uses: ad-m/github-push-action@master
+        with:  
+          github_token: ${{ secrets.GITHUB_TOKEN }}
