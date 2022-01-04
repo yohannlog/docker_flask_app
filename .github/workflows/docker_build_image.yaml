@@ -38,6 +38,7 @@ jobs:
           cd kustomize/
           kustomize edit set image flask-app=$DOCKER_USERNAME/flask-app:$IMAGE_VERSION
           cat kustomization.yaml
+          yq e '.spec.template.spec.containers.0.image |="$DOCKER_USERNAME/flask-app:$IMAGE_VERSION"' -i 01_deployment.yaml -I 2
       
       - name: Commit files
         run: |
