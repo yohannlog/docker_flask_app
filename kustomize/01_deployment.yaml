@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: polack27/flask-app:latest
+          image: $DOCKER_USERNAME/flask-app:$IMAGE_VERSION
           resources:
             limits:
               memory: "128Mi"
