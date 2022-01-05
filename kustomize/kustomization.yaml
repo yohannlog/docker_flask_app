@@ -17,8 +17,8 @@ replicas:
 
 images:
 - name: flask-app
-  newName: polack27/flask-app
-  newTag: 1.2.1
+  newName: yohannlog/flask-app
+  newTag: latest
 
 patches:
 - patch: |-
